@@ -684,6 +684,15 @@ h2 {
     margin: 0 auto var(--spacing-md);
 }
 
+.tech-logo-img {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    margin: 0 auto var(--spacing-md);
+    display: block;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.2));
+}
+
 .tech-card h4 {
     font-size: 1rem;
     font-weight: 600;
