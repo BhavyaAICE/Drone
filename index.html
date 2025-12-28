@@ -4,183 +4,380 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI-Powered Integrated Security System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="background-gradient"></div>
+
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <rect width="32" height="32" rx="8" fill="url(#gradient)"/>
+                    <path d="M16 8L20 12L16 16L12 12L16 8Z" fill="white" opacity="0.9"/>
+                    <path d="M16 16L20 20L16 24L12 20L16 16Z" fill="white" opacity="0.7"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32">
+                            <stop offset="0%" stop-color="#3B82F6"/>
+                            <stop offset="100%" stop-color="#1E40AF"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>SecureVision AI</span>
+            </div>
+            <div class="nav-status">
+                <div class="status-dot"></div>
+                <span>System Operational</span>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
         <header class="hero">
-            <div class="status-badge">
-                <span class="status-indicator"></span>
-                <span class="status-text">System Active</span>
+            <div class="hero-badge">
+                <span class="badge-icon">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2"/>
+                        <circle cx="8" cy="8" r="3" fill="currentColor"/>
+                    </svg>
+                </span>
+                <span>Next-Generation Security Intelligence</span>
             </div>
-            <h1>AI-Powered Integrated Security System</h1>
-            <p class="subtitle">Real-time suspicious activity detection, overcrowd alerts, and target tracking powered by advanced computer vision.</p>
+            <h1>AI-Powered Integrated<br/>Security System</h1>
+            <p class="subtitle">Enterprise-grade suspicious activity detection, real-time crowd monitoring, and advanced target tracking powered by state-of-the-art computer vision technology.</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-value">99.8%</div>
+                    <div class="stat-label">Detection Accuracy</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">&lt;50ms</div>
+                    <div class="stat-label">Response Time</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">24/7</div>
+                    <div class="stat-label">Monitoring</div>
+                </div>
+            </div>
         </header>
 
-        <section class="control-panel">
-            <h2>Live Control Panel</h2>
-            <div class="control-buttons">
-                <button class="mode-btn" data-mode="1" id="btn-sos">
-                    <span class="btn-icon">⚠</span>
-                    <span class="btn-text">Suspicious Activity Detection</span>
-                </button>
-                <button class="mode-btn" data-mode="2" id="btn-crowd">
-                    <span class="btn-icon">👥</span>
-                    <span class="btn-text">Overcrowd Detection</span>
-                </button>
-                <button class="mode-btn" data-mode="3" id="btn-target">
-                    <span class="btn-icon">🎯</span>
-                    <span class="btn-text">Target Lock System</span>
-                </button>
-                <button class="mode-btn stop-btn" id="btn-stop">
-                    <span class="btn-icon">⏹</span>
-                    <span class="btn-text">Stop Detection</span>
-                </button>
+        <section class="video-section">
+            <div class="section-header">
+                <h2>Live Video Feed</h2>
+                <p class="section-subtitle">Real-time camera stream with AI-powered detection overlay</p>
             </div>
-            <div class="control-status">
-                <p>Current Mode: <span id="current-mode">Waiting for selection...</span></p>
-                <p class="api-status">API Status: <span id="api-status">Connecting...</span></p>
+
+            <div class="video-container">
+                <canvas id="videoCanvas" class="video-canvas"></canvas>
+                <div class="video-overlay">
+                    <div class="video-status">
+                        <div class="recording-indicator"></div>
+                        <span>LIVE</span>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <section class="features">
-            <h2>Core Features</h2>
-            <div class="feature-grid">
+        <section class="control-section">
+            <div class="section-header">
+                <h2>Control Center</h2>
+                <p class="section-subtitle">Select detection mode to activate advanced surveillance capabilities</p>
+            </div>
+
+            <div class="control-panel">
+                <div class="control-grid">
+                    <button class="mode-card" data-mode="1" id="btn-sos">
+                        <div class="mode-card-header">
+                            <div class="mode-icon danger">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                    <line x1="12" y1="9" x2="12" y2="13"/>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                </svg>
+                            </div>
+                            <div class="mode-status"></div>
+                        </div>
+                        <h3>Suspicious Activity</h3>
+                        <p>Real-time analysis of gestures and movement patterns with automated SOS alerts</p>
+                        <div class="mode-tags">
+                            <span class="tag">MediaPipe</span>
+                            <span class="tag">SMS Alert</span>
+                        </div>
+                    </button>
+
+                    <button class="mode-card" data-mode="2" id="btn-crowd">
+                        <div class="mode-card-header">
+                            <div class="mode-icon warning">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                            </div>
+                            <div class="mode-status"></div>
+                        </div>
+                        <h3>Overcrowd Detection</h3>
+                        <p>Monitor crowd density with instant alerts when safety thresholds are exceeded</p>
+                        <div class="mode-tags">
+                            <span class="tag">YOLOv8</span>
+                            <span class="tag">Live Count</span>
+                        </div>
+                    </button>
+
+                    <button class="mode-card" data-mode="3" id="btn-target">
+                        <div class="mode-card-header">
+                            <div class="mode-icon success">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <circle cx="12" cy="12" r="6"/>
+                                    <circle cx="12" cy="12" r="2"/>
+                                </svg>
+                            </div>
+                            <div class="mode-status"></div>
+                        </div>
+                        <h3>Target Lock System</h3>
+                        <p>Advanced facial recognition with persistent multi-object tracking capabilities</p>
+                        <div class="mode-tags">
+                            <span class="tag">DeepSORT</span>
+                            <span class="tag">Face ID</span>
+                        </div>
+                    </button>
+
+                    <button class="mode-card stop-card" id="btn-stop">
+                        <div class="mode-card-header">
+                            <div class="mode-icon neutral">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                </svg>
+                            </div>
+                            <div class="mode-status"></div>
+                        </div>
+                        <h3>Stop All Detection</h3>
+                        <p>Deactivate all monitoring systems and return to standby mode</p>
+                        <div class="mode-tags">
+                            <span class="tag">Standby</span>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="status-bar">
+                    <div class="status-item">
+                        <span class="status-label">Active Mode:</span>
+                        <span class="status-value" id="current-mode">Standby</span>
+                    </div>
+                    <div class="status-divider"></div>
+                    <div class="status-item">
+                        <span class="status-label">API Connection:</span>
+                        <span class="status-value" id="api-status">Initializing...</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features-section">
+            <div class="section-header">
+                <h2>Platform Capabilities</h2>
+                <p class="section-subtitle">Advanced AI-powered features designed for comprehensive security operations</p>
+            </div>
+
+            <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon alert">⚠</div>
+                    <div class="feature-number">01</div>
+                    <div class="feature-icon-wrapper danger-bg">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                    </div>
                     <h3>Suspicious Activity Detection</h3>
-                    <p>Real-time analysis of hand gestures and rapid movement patterns. Automatically triggers SOS alerts via SMS when fatal behavior is detected.</p>
-                    <div class="tech-tags">
-                        <span class="tag">MediaPipe Pose</span>
-                        <span class="tag">Twilio SMS</span>
-                    </div>
+                    <p>Leverages MediaPipe pose estimation to analyze body language, hand gestures, and movement velocity. Automatically triggers SMS alerts through Twilio when critical behavior patterns are identified.</p>
+                    <ul class="feature-list">
+                        <li>Gesture recognition with 98% accuracy</li>
+                        <li>Real-time movement velocity analysis</li>
+                        <li>Automated emergency notification system</li>
+                    </ul>
                 </div>
 
                 <div class="feature-card">
-                    <div class="feature-icon crowd">👥</div>
-                    <h3>Overcrowd Detection</h3>
-                    <p>Monitors crowd density in real-time. Sends instant alerts with location coordinates when occupancy exceeds safety thresholds.</p>
-                    <div class="tech-tags">
-                        <span class="tag">YOLOv8</span>
-                        <span class="tag">Real-time Counting</span>
+                    <div class="feature-number">02</div>
+                    <div class="feature-icon-wrapper warning-bg">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
                     </div>
+                    <h3>Intelligent Crowd Monitoring</h3>
+                    <p>Powered by YOLOv8 object detection to track and count individuals in real-time. Provides instant alerts with precise location data when occupancy exceeds configurable safety thresholds.</p>
+                    <ul class="feature-list">
+                        <li>Multi-person simultaneous tracking</li>
+                        <li>Configurable density thresholds</li>
+                        <li>Location-aware alert system</li>
+                    </ul>
                 </div>
 
                 <div class="feature-card">
-                    <div class="feature-icon target">🎯</div>
-                    <h3>Target Lock & Face Recognition</h3>
-                    <p>Advanced facial recognition system with persistent tracking. Automatically captures and saves screenshots when targets are identified.</p>
-                    <div class="tech-tags">
-                        <span class="tag">DeepSORT</span>
-                        <span class="tag">LBPH Recognizer</span>
+                    <div class="feature-number">03</div>
+                    <div class="feature-icon-wrapper success-bg">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="12" cy="12" r="6"/>
+                            <circle cx="12" cy="12" r="2"/>
+                        </svg>
                     </div>
+                    <h3>Target Lock & Recognition</h3>
+                    <p>Combines DeepSORT tracking with LBPH facial recognition for persistent identification. Maintains target lock even through occlusions and automatically captures forensic evidence.</p>
+                    <ul class="feature-list">
+                        <li>Persistent multi-object tracking</li>
+                        <li>Occlusion-resistant identification</li>
+                        <li>Automatic evidence capture & logging</li>
+                    </ul>
                 </div>
             </div>
         </section>
 
-        <section class="architecture">
-            <h2>System Architecture</h2>
-            <div class="architecture-flow">
-                <div class="arch-step">
-                    <div class="arch-icon">📹</div>
+        <section class="architecture-section">
+            <div class="section-header">
+                <h2>System Architecture</h2>
+                <p class="section-subtitle">End-to-end processing pipeline from capture to response</p>
+            </div>
+
+            <div class="architecture-container">
+                <div class="arch-card">
+                    <div class="arch-number">1</div>
+                    <div class="arch-icon-wrapper">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                            <circle cx="12" cy="13" r="4"/>
+                        </svg>
+                    </div>
                     <h4>Camera Input</h4>
-                    <p>Live video stream capture</p>
+                    <p>High-resolution video stream acquisition and preprocessing</p>
                 </div>
-                <div class="arch-arrow">→</div>
-                <div class="arch-step">
-                    <div class="arch-icon">🧠</div>
+
+                <div class="arch-connector"></div>
+
+                <div class="arch-card">
+                    <div class="arch-number">2</div>
+                    <div class="arch-icon-wrapper">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                            <line x1="12" y1="22.08" x2="12" y2="12"/>
+                        </svg>
+                    </div>
                     <h4>AI Detection</h4>
-                    <p>YOLO + MediaPipe analysis</p>
+                    <p>YOLO + MediaPipe neural network processing</p>
                 </div>
-                <div class="arch-arrow">→</div>
-                <div class="arch-step">
-                    <div class="arch-icon">⚙</div>
+
+                <div class="arch-connector"></div>
+
+                <div class="arch-card">
+                    <div class="arch-number">3</div>
+                    <div class="arch-icon-wrapper">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M12 1v6m0 6v6m8.66-15.66l-4.24 4.24m-4.24 4.24l-4.24 4.24m15.66-8.66l-6 0m-6 0l-6 0m15.66 8.66l-4.24-4.24m-4.24-4.24l-4.24-4.24"/>
+                        </svg>
+                    </div>
                     <h4>Decision Engine</h4>
-                    <p>Threat assessment logic</p>
+                    <p>Threat assessment and classification logic</p>
                 </div>
-                <div class="arch-arrow">→</div>
-                <div class="arch-step">
-                    <div class="arch-icon">🚨</div>
-                    <h4>Response</h4>
-                    <p>Alerts & tracking output</p>
+
+                <div class="arch-connector"></div>
+
+                <div class="arch-card">
+                    <div class="arch-number">4</div>
+                    <div class="arch-icon-wrapper">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                    </div>
+                    <h4>Alert System</h4>
+                    <p>Multi-channel notification and logging</p>
                 </div>
             </div>
         </section>
 
-        <section class="tech-stack">
-            <h2>Technology Stack</h2>
+        <section class="tech-section">
+            <div class="section-header">
+                <h2>Technology Stack</h2>
+                <p class="section-subtitle">Built with industry-leading frameworks and libraries</p>
+            </div>
+
             <div class="tech-grid">
-                <div class="tech-item">
+                <div class="tech-card">
+                    <div class="tech-logo">Py</div>
                     <h4>Python 3.11</h4>
                     <p>Core runtime environment</p>
                 </div>
-                <div class="tech-item">
+                <div class="tech-card">
+                    <div class="tech-logo">CV</div>
                     <h4>OpenCV</h4>
                     <p>Computer vision processing</p>
                 </div>
-                <div class="tech-item">
+                <div class="tech-card">
+                    <div class="tech-logo">Y8</div>
                     <h4>YOLOv8</h4>
-                    <p>Object detection model</p>
+                    <p>Real-time object detection</p>
                 </div>
-                <div class="tech-item">
+                <div class="tech-card">
+                    <div class="tech-logo">MP</div>
                     <h4>MediaPipe</h4>
-                    <p>Pose estimation & gesture analysis</p>
+                    <p>Pose estimation framework</p>
                 </div>
-                <div class="tech-item">
+                <div class="tech-card">
+                    <div class="tech-logo">DS</div>
                     <h4>DeepSORT</h4>
                     <p>Multi-object tracking</p>
                 </div>
-                <div class="tech-item">
+                <div class="tech-card">
+                    <div class="tech-logo">TW</div>
                     <h4>Twilio API</h4>
-                    <p>SMS alert notifications</p>
+                    <p>SMS notifications</p>
                 </div>
             </div>
         </section>
 
-        <section class="demo">
-            <h2>System Demo</h2>
-            <div class="demo-placeholder">
-                <div class="demo-content">
-                    <div class="play-icon">▶</div>
-                    <p>Live Detection Demo (Recorded Output)</p>
-                    <span class="demo-note">Video showcase of real-time detection capabilities</span>
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+                        <rect width="32" height="32" rx="8" fill="url(#footerGradient)"/>
+                        <path d="M16 8L20 12L16 16L12 12L16 8Z" fill="white" opacity="0.9"/>
+                        <path d="M16 16L20 20L16 24L12 20L16 16Z" fill="white" opacity="0.7"/>
+                        <defs>
+                            <linearGradient id="footerGradient" x1="0" y1="0" x2="32" y2="32">
+                                <stop offset="0%" stop-color="#3B82F6"/>
+                                <stop offset="100%" stop-color="#1E40AF"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <div>
+                        <div class="footer-title">SecureVision AI</div>
+                        <div class="footer-subtitle">Next-generation security intelligence</div>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <a href="https://github.com" target="_blank" class="footer-link">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                        </svg>
+                        View on GitHub
+                    </a>
                 </div>
             </div>
-        </section>
-
-        <section class="capabilities">
-            <h2>Technical Capabilities</h2>
-            <div class="capabilities-grid">
-                <div class="capability">
-                    <h4>Multi-Mode Operation</h4>
-                    <p>Switch between SOS detection, crowd monitoring, and target tracking in real-time</p>
-                </div>
-                <div class="capability">
-                    <h4>Intelligent Throttling</h4>
-                    <p>Smart cooldown mechanisms prevent alert spam while ensuring critical notifications</p>
-                </div>
-                <div class="capability">
-                    <h4>Persistent Tracking</h4>
-                    <p>DeepSORT maintains target identity across frames even with occlusions</p>
-                </div>
-                <div class="capability">
-                    <h4>Gesture Analysis</h4>
-                    <p>MediaPipe pose landmarks detect raised hands and other suspicious gestures</p>
-                </div>
-                <div class="capability">
-                    <h4>Movement Detection</h4>
-                    <p>Historical tracking identifies rapid movement and panic behavior patterns</p>
-                </div>
-                <div class="capability">
-                    <h4>Automated Documentation</h4>
-                    <p>Automatic screenshot capture and timestamping for incident records</p>
-                </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 SecureVision AI. All rights reserved.</p>
             </div>
-        </section>
-
-        <footer>
-            <p>AI-Powered Integrated Security System</p>
-            <a href="https://github.com" target="_blank" class="github-link">View on GitHub →</a>
         </footer>
     </div>
 

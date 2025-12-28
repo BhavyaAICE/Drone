@@ -89,7 +89,7 @@ function sendFrameLoop() {
 
 // ================= CONTROLS =================
 function initControls() {
-    document.querySelectorAll(".mode-btn").forEach(btn => {
+    document.querySelectorAll(".mode-card").forEach(btn => {
         btn.addEventListener("click", async () => {
             const mode = btn.dataset.mode;
             await switchMode(mode);
@@ -99,17 +99,24 @@ function initControls() {
 
 async function switchMode(mode) {
     let endpoint = "/mode/stop";
-    let label = "Idle";
+    let label = "Standby";
+
+    document.querySelectorAll(".mode-card").forEach(btn => btn.classList.remove("active"));
 
     if (mode === "1") {
         endpoint = "/mode/1";
-        label = "Suspicious Detection";
+        label = "Suspicious Activity Detection";
+        document.getElementById("btn-sos").classList.add("active");
     } else if (mode === "2") {
         endpoint = "/mode/2";
         label = "Overcrowd Detection";
+        document.getElementById("btn-crowd").classList.add("active");
     } else if (mode === "3") {
         endpoint = "/mode/3";
         label = "Target Lock System";
+        document.getElementById("btn-target").classList.add("active");
+    } else {
+        document.getElementById("btn-stop").classList.add("active");
     }
 
     await fetch(API_BASE + endpoint, { method: "POST" });
@@ -130,7 +137,7 @@ function updateApiStatus(text, status) {
     const el = document.getElementById("api-status");
     el.textContent = text;
     el.style.color =
-        status === "connected" ? "#00ff00" :
-        status === "error" ? "#ff4444" :
-        "#ffaa00";
+        status === "connected" ? "#10B981" :
+        status === "error" ? "#EF4444" :
+        "#F59E0B";
 }
