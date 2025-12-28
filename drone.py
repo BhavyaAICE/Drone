@@ -88,128 +88,122 @@ def send_overcrowd_sms(count):
 cap = cv2.VideoCapture(0)
 mode = None  # Modes: "sos", "crowd", "target"
 
-print("Press '1' for Suspicious Detection + SOS")
-print("Press '2' for Overcrowd Detection")
-print("Press '3' for Target Lock System")
-print("Press 'q' to quit")
+def run_detection_loop():
+    global mode, track_history, LOCK_ID, lock_time
 
-while True:
-    ret, frame = cap.read()
-    if not ret:
-        break
-    key = cv2.waitKey(1) & 0xFF
+    print("[DETECTOR] Waiting for mode selection via API...")
 
-    # SWITCH MODES
-    if key == ord("1"):
-        mode = "sos"
-        print("[MODE] Suspicious Detection + SOS Active")
-    elif key == ord("2"):
-        mode = "crowd"
-        print("[MODE] Overcrowd Detection Active")
-    elif key == ord("3"):
-        mode = "target"
-        print("[MODE] Target Lock System Active")
-    elif key == ord("q"):
-        break
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
 
-    if mode == "sos":
-        rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        results = yolo.predict(frame, conf=0.5, classes=[0], verbose=False)
-        for r in results:
-            for box in r.boxes.xyxy:
-                x1, y1, x2, y2 = map(int, box)
-                suspicious = False
-                label = "No Harm"
-                color = (0, 255, 0)
-                crop = rgb[y1:y2, x1:x2]
-                if crop.size == 0:
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+        if mode == "sos":
+            rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            results = yolo.predict(frame, conf=0.5, classes=[0], verbose=False)
+            for r in results:
+                for box in r.boxes.xyxy:
+                    x1, y1, x2, y2 = map(int, box)
+                    suspicious = False
+                    label = "No Harm"
+                    color = (0, 255, 0)
+                    crop = rgb[y1:y2, x1:x2]
+                    if crop.size == 0:
+                        continue
+                    pose_result = pose.process(crop)
+                    if pose_result.pose_landmarks:
+                        lm = pose_result.pose_landmarks.landmark
+                        lw = lm[mp_pose.PoseLandmark.LEFT_WRIST]
+                        rw = lm[mp_pose.PoseLandmark.RIGHT_WRIST]
+                        ls = lm[mp_pose.PoseLandmark.LEFT_SHOULDER]
+                        rs = lm[mp_pose.PoseLandmark.RIGHT_SHOULDER]
+                        if lw.y < ls.y or rw.y < rs.y:
+                            suspicious = True
+                            label = "Fatal Gesture"
+                    cx = (x1 + x2)//2
+                    cy = (y1 + y2)//2
+                    pid = (x1, y1, x2, y2)
+                    if pid not in track_history:
+                        track_history[pid] = deque(maxlen=HISTORY_LEN)
+                    track_history[pid].append((cx, cy))
+                    if len(track_history[pid]) >= 2:
+                        dx = track_history[pid][-1][0] - track_history[pid][0][0]
+                        dy = track_history[pid][-1][1] - track_history[pid][0][1]
+                        speed = np.sqrt(dx*dx + dy*dy)
+                        if speed > RUN_THRESHOLD:
+                            suspicious = True
+                            label = "Running or Panic"
+                    if suspicious:
+                        color = (0,0,255)
+                        send_dummy_sos()
+                    cv2.rectangle(frame, (x1,y1), (x2,y2), color, 3)
+                    cv2.putText(frame, label, (x1,y1-10), cv2.FONT_HERSHEY_SIMPLEX, 0.8, color, 2)
+
+        elif mode == "crowd":
+            results = yolo.predict(frame, imgsz=640, conf=0.5, classes=[0])
+            total_people = 0
+            for result in results:
+                boxes = result.boxes
+                if boxes is None:
                     continue
-                pose_result = pose.process(crop)
-                if pose_result.pose_landmarks:
-                    lm = pose_result.pose_landmarks.landmark
-                    lw = lm[mp_pose.PoseLandmark.LEFT_WRIST]
-                    rw = lm[mp_pose.PoseLandmark.RIGHT_WRIST]
-                    ls = lm[mp_pose.PoseLandmark.LEFT_SHOULDER]
-                    rs = lm[mp_pose.PoseLandmark.RIGHT_SHOULDER]
-                    if lw.y < ls.y or rw.y < rs.y:
-                        suspicious = True
-                        label = "Fatal Gesture"
-                cx = (x1 + x2)//2
-                cy = (y1 + y2)//2
-                pid = (x1, y1, x2, y2)
-                if pid not in track_history:
-                    track_history[pid] = deque(maxlen=HISTORY_LEN)
-                track_history[pid].append((cx, cy))
-                if len(track_history[pid]) >= 2:
-                    dx = track_history[pid][-1][0] - track_history[pid][0][0]
-                    dy = track_history[pid][-1][1] - track_history[pid][0][1]
-                    speed = np.sqrt(dx*dx + dy*dy)
-                    if speed > RUN_THRESHOLD:
-                        suspicious = True
-                        label = "Running or Panic"
-                if suspicious:
-                    color = (0,0,255)
-                    send_dummy_sos()
-                cv2.rectangle(frame, (x1,y1), (x2,y2), color, 3)
-                cv2.putText(frame, label, (x1,y1-10), cv2.FONT_HERSHEY_SIMPLEX, 0.8, color, 2)
+                for box in boxes:
+                    x1, y1, x2, y2 = box.xyxy[0].cpu().numpy().astype(int)
+                    total_people += 1
+                    cx = (x1 + x2)//2
+                    cy = (y1 + y2)//2
+                    cv2.circle(frame, (cx, cy), DOT_RADIUS, DOT_COLOR, -1)
+            if total_people >= OVERCROWD_LIMIT:
+                cv2.putText(frame, "OVERCROWD DETECTED!", (30,60),
+                            cv2.FONT_HERSHEY_SIMPLEX, 1.2, ALERT_COLOR, 3)
+                send_overcrowd_sms(total_people)
+            cv2.putText(frame, f"People Count: {total_people}", (30,30),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.9,
+                        ALERT_COLOR if total_people>=OVERCROWD_LIMIT else (0,255,0), 2)
 
-    elif mode == "crowd":
-        results = yolo.predict(frame, imgsz=640, conf=0.5, classes=[0])
-        total_people = 0
-        for result in results:
-            boxes = result.boxes
-            if boxes is None:
-                continue
-            for box in boxes:
-                x1, y1, x2, y2 = box.xyxy[0].cpu().numpy().astype(int)
-                total_people += 1
-                cx = (x1 + x2)//2
-                cy = (y1 + y2)//2
-                cv2.circle(frame, (cx, cy), DOT_RADIUS, DOT_COLOR, -1)
-        if total_people >= OVERCROWD_LIMIT:
-            cv2.putText(frame, "OVERCROWD DETECTED!", (30,60),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1.2, ALERT_COLOR, 3)
-            send_overcrowd_sms(total_people)
-        cv2.putText(frame, f"People Count: {total_people}", (30,30),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.9,
-                    ALERT_COLOR if total_people>=OVERCROWD_LIMIT else (0,255,0), 2)
-
-    elif mode == "target":
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        results = yolo(frame, conf=0.5, verbose=False)[0]
-        detections = []
-        for box in results.boxes:
-            if int(box.cls[0]) == 0:
-                x1, y1, x2, y2 = map(int, box.xyxy[0])
-                detections.append(([x1, y1, x2-x1, y2-y1], 0.9, "person"))
-        tracks = tracker.update_tracks(detections, frame=frame)
-        active_ids = set()
-        for track in tracks:
-            if not track.is_confirmed():
-                continue
-            tid = track.track_id
-            active_ids.add(tid)
-            x1, y1, x2, y2 = map(int, track.to_ltrb())
-            person = gray[y1:y2, x1:x2]
-            faces = face_cascade.detectMultiScale(person, 1.3, 5)
-            for (fx, fy, fw, fh) in faces:
-                if fw < 80 or fh < 80:
+        elif mode == "target":
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            results = yolo(frame, conf=0.5, verbose=False)[0]
+            detections = []
+            for box in results.boxes:
+                if int(box.cls[0]) == 0:
+                    x1, y1, x2, y2 = map(int, box.xyxy[0])
+                    detections.append(([x1, y1, x2-x1, y2-y1], 0.9, "person"))
+            tracks = tracker.update_tracks(detections, frame=frame)
+            active_ids = set()
+            for track in tracks:
+                if not track.is_confirmed():
                     continue
-                face_crop = cv2.resize(person[fy:fy+fh, fx:fx+fw], (200,200))
-                _, confidence = recognizer.predict(face_crop)
-                if confidence < 80:
-                    LOCK_ID = tid
-                    lock_time = time.time()
-                    cv2.imwrite(f"screenshots/TARGET_{int(time.time())}.jpg", frame)
-            if LOCK_ID is not None and tid == LOCK_ID:
-                cv2.rectangle(frame, (x1,y1), (x2,y2), (0,0,255),3)
-                cv2.putText(frame,"TARGET LOCKED",(x1,y1-10),
-                            cv2.FONT_HERSHEY_SIMPLEX,0.8,(0,0,255),2)
-        if LOCK_ID is not None and LOCK_ID not in active_ids:
-            if time.time() - lock_time > LOCK_DURATION:
-                LOCK_ID = None
+                tid = track.track_id
+                active_ids.add(tid)
+                x1, y1, x2, y2 = map(int, track.to_ltrb())
+                person = gray[y1:y2, x1:x2]
+                faces = face_cascade.detectMultiScale(person, 1.3, 5)
+                for (fx, fy, fw, fh) in faces:
+                    if fw < 80 or fh < 80:
+                        continue
+                    face_crop = cv2.resize(person[fy:fy+fh, fx:fx+fw], (200,200))
+                    _, confidence = recognizer.predict(face_crop)
+                    if confidence < 80:
+                        LOCK_ID = tid
+                        lock_time = time.time()
+                        cv2.imwrite(f"screenshots/TARGET_{int(time.time())}.jpg", frame)
+                if LOCK_ID is not None and tid == LOCK_ID:
+                    cv2.rectangle(frame, (x1,y1), (x2,y2), (0,0,255),3)
+                    cv2.putText(frame,"TARGET LOCKED",(x1,y1-10),
+                                cv2.FONT_HERSHEY_SIMPLEX,0.8,(0,0,255),2)
+            if LOCK_ID is not None and LOCK_ID not in active_ids:
+                if time.time() - lock_time > LOCK_DURATION:
+                    LOCK_ID = None
 
-    cv2.imshow("Integrated Security System", frame)
+        cv2.imshow("Integrated Security System", frame)
 
-cap.release()
-cv2.destroyAllWindows()
+    cap.release()
+    cv2.destroyAllWindows()
+
+
+if __name__ == "__main__":
+    run_detection_loop()

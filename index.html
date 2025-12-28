@@ -17,6 +17,32 @@
             <p class="subtitle">Real-time suspicious activity detection, overcrowd alerts, and target tracking powered by advanced computer vision.</p>
         </header>
 
+        <section class="control-panel">
+            <h2>Live Control Panel</h2>
+            <div class="control-buttons">
+                <button class="mode-btn" data-mode="1" id="btn-sos">
+                    <span class="btn-icon">⚠</span>
+                    <span class="btn-text">Suspicious Activity Detection</span>
+                </button>
+                <button class="mode-btn" data-mode="2" id="btn-crowd">
+                    <span class="btn-icon">👥</span>
+                    <span class="btn-text">Overcrowd Detection</span>
+                </button>
+                <button class="mode-btn" data-mode="3" id="btn-target">
+                    <span class="btn-icon">🎯</span>
+                    <span class="btn-text">Target Lock System</span>
+                </button>
+                <button class="mode-btn stop-btn" id="btn-stop">
+                    <span class="btn-icon">⏹</span>
+                    <span class="btn-text">Stop Detection</span>
+                </button>
+            </div>
+            <div class="control-status">
+                <p>Current Mode: <span id="current-mode">Waiting for selection...</span></p>
+                <p class="api-status">API Status: <span id="api-status">Connecting...</span></p>
+            </div>
+        </section>
+
         <section class="features">
             <h2>Core Features</h2>
             <div class="feature-grid">
